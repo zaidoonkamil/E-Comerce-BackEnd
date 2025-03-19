@@ -5,9 +5,11 @@ const productRoutes = require('./routes/products');
 const categoryRoutes = require('./routes/category');
 const orderRoutes = require("./routes/order");
 const adsRoutes = require("./routes/ads");
+const path = require('path');
 
 const app = express();
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 sequelize.sync({ force: false })
     .then(() => console.log("✅ Database & User table synced!"))
