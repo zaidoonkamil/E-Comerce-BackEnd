@@ -31,4 +31,21 @@ router.get("/ads", async (req, res) => {
 }
 });
 
+router.delete("/ads/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const ad = await Ads.findByPk(id);
+        if (!ad) {
+            return res.status(404).json({ error: "Ad not found" });
+        }
+
+        await ad.destroy();
+        res.status(200).json({ message: "Ad deleted successfully" });
+    } catch (err) {
+        console.error("❌ Error deleting ad:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+
 module.exports = router;
