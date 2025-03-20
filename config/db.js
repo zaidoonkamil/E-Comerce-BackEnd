@@ -9,6 +9,7 @@ const sequelize = new Sequelize(
     dialect: "mysql",
     logging: false,
 });
+console.log("adas")
 
 sequelize.authenticate()
     .then(() => console.log("✅ Connected to MySQL successfully!"))
