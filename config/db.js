@@ -11,7 +11,7 @@ const sequelize = new Sequelize(
 });
 console.log("adas")
 
-sequelize.authenticate()
+sequelize.authenticate({alter: true})
     .then(() => console.log("✅ Connected to MySQL successfully!"))
     .catch(err => console.error("❌ Unable to connect to MySQL:", err));
 
