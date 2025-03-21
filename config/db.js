@@ -11,8 +11,12 @@ const sequelize = new Sequelize(
 });
 console.log("adas")
 
-sequelize.authenticate({alter: true})
+sequelize.authenticate()
     .then(() => console.log("✅ Connected to MySQL successfully!"))
     .catch(err => console.error("❌ Unable to connect to MySQL:", err));
+    sequelize.sync({ alter: true }) 
+    .then(() => console.log("✅ Database synchronized (altered if needed)"))
+    .catch(err => console.error("❌ Error synchronizing database:", err));
+
 
 module.exports = sequelize;
