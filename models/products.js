@@ -19,14 +19,14 @@ const Products = sequelize.define("Products", {
       type: DataTypes.JSON,
       allowNull: false
     },
-    categoryId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-          model: "Categories",
-          key: "id"
-      }
-  },
+  //   categoryId: {
+  //     type: DataTypes.INTEGER,
+  //     allowNull: false,
+  //     references: {
+  //         model: "Categories",
+  //         key: "id"
+  //     }
+  // },
    rating: {
       type: DataTypes.FLOAT,
       allowNull: false,
