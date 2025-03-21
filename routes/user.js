@@ -100,6 +100,19 @@ router.get("/users", async (req, res) => {
     }
 });
 
+router.get("/profile", authenticateToken, async (req, res) => {
+    try {
+        // جلب بيانات المستخدم بناءً على الـ id الموجود في الـ token
+        const user = await User.findByPk(req.user.id);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        res.status(200).json(user);
+    } catch (err) {
+        console.error("Error fetching user:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 // للحصول على بيانات مستخدم معين
 router.get("/users/:id", authenticateToken ,async (req,res)=>{
