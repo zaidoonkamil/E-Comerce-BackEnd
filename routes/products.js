@@ -28,7 +28,7 @@ router.post("/products", upload.array("images", 5), async (req, res) => {
   }
 });
 
-router.get("/product/ids", async (req, res) => {
+router.get("/products/ids", async (req, res) => {
   const { ids } = req.query; // جلب قائمة الـ id من الكويري بارام
   if (!ids) {
     return res.status(400).json({ error: "يجب تمرير قائمة من المعرفات (ids)" });
@@ -49,6 +49,24 @@ router.get("/product/ids", async (req, res) => {
   }
 });
 
+router.get("/products/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const product = await Product.findByPk(id, {
+      include: ["category"], 
+    });
+
+    if (!product) {
+      return res.status(404).json({ error: "المنتج غير موجود" });
+    }
+
+    res.json(product);
+  } catch (err) {
+    console.error("❌ Error fetching product:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 router.get("/products", async (req, res) => {
   try {
@@ -62,6 +80,7 @@ router.get("/products", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 router.get("/products/:id", async (req, res) => {
   const { id } = req.params;
