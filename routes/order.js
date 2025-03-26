@@ -107,10 +107,36 @@ router.put("/orders/:orderId", authenticateToken , async (req, res) => {
     }
 });
 
+// جلب جميع الاوردرات لمستخدم معين حسب الحالة
+router.get("/orders/:status", authenticateToken, async (req, res) => {
+    const { status } = req.params;
+
+    if (!['pending', 'completed', 'cancelled'].includes(status)) {
+        return res.status(400).json({ error: "Invalid status, must be 'pending', 'completed' or 'cancelled'" });
+    }
+
+    try {
+        const orders = await Order.findAll({
+            where: { userId: req.user.id, status },
+            include: {
+                model: OrderItem,
+                include: {
+                    model: Product
+                }
+            }
+        });
+
+        res.status(200).json(orders);
+    } catch (err) {
+        console.error("❌ Error fetching orders:", err);
+        res.status(500).json({ error: "An error occurred while fetching the orders" });
+    }
+});
+
 router.get("/orders", authenticateToken, async (req, res) => {
     try {
         const orders = await Order.findAll({
-            where: { userId: req.user.id }, // جلب الطلبات الخاصة بالمستخدم الحالي
+            where: { userId: req.user.id }, 
             include: {
                 model: OrderItem,
                 include: {
