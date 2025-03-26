@@ -28,6 +28,28 @@ router.post("/products", upload.array("images", 5), async (req, res) => {
   }
 });
 
+router.get("/product/ids", async (req, res) => {
+  const { ids } = req.query; // جلب قائمة الـ id من الكويري بارام
+  if (!ids) {
+    return res.status(400).json({ error: "يجب تمرير قائمة من المعرفات (ids)" });
+  }
+
+  const idArray = ids.split(",").map(id => parseInt(id.trim())); // تحويل النص إلى مصفوفة أرقام
+
+  try {
+    const products = await Product.findAll({
+      where: { id: idArray }, // البحث عن المنتجات التي تملك هذه المعرفات
+      include: ["category"],
+    });
+
+    res.json(products);
+  } catch (err) {
+    console.error("❌ Error fetching products:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
 router.get("/products", async (req, res) => {
   try {
     const products = await Product.findAll({
