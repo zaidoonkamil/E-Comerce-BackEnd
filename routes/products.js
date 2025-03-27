@@ -121,4 +121,22 @@ router.get("/products/category/:categoryId", async (req, res) => {
   }
 });
 
+// حذف منتج
+router.delete("/products/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const product = await Product.findByPk(id);
+    if (!product) {
+      return res.status(404).json({ error: "المنتج غير موجود" });
+    }
+
+    await product.destroy();
+    res.json({ message: "تم حذف المنتج بنجاح" });
+  } catch (err) {
+    console.error("❌ Error deleting product:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = router;
