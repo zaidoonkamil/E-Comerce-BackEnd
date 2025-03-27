@@ -38,7 +38,7 @@ router.post("/users", upload.none() ,async (req, res) => {
             return res.status(400).json({ error: "Email already in use" });
         }
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-        const user = await User.create({ name, email, password: hashedPassword });
+        const user = await User.create({ name, email, password: hashedPassword, role });
         res.status(201).json({
         id: user.id,
         name: user.name,
