@@ -79,7 +79,7 @@ router.put("/orders/:orderId", authenticateToken , async (req, res) => {
     const { orderId } = req.params;
     const { status } = req.body;
 
-    if (!status || !['completed', 'cancelled'].includes(status)) {
+    if (!status || !['completed', 'canceled'].includes(status)) {
         return res.status(400).json({ error: "Invalid status, must be 'completed' or 'cancelled'" });
     }
 
@@ -89,12 +89,11 @@ router.put("/orders/:orderId", authenticateToken , async (req, res) => {
             return res.status(404).json({ error: "Order not found" });
         }
 
-        if (order.userId !== req.user.id) {
+        if (req.user.role !== "admin" && order.userId !== req.user.id) {
             return res.status(403).json({ error: "Access denied, you are not the owner of this order" });
         }
 
-        order.status = status;
-        await order.save();
+        await order.update({ status });
 
         res.status(200).json({
             message: `Order status updated to ${status}`,
